@@ -115,6 +115,19 @@ public class TestQuestion {
 			System.out.println(questiontbl.getQtitle());
 			System.out.println("**************************");
 		}
+		
+		
+		// 특정 문자로 제목 레코드 조회 (like) + 최근 글이 위로 오도록 정렬
+		List<Questiontbl> questionLike = questionRepository.findAllByQtitleLikeOrderByQdateDesc("%질문%");
+		for (Questiontbl questiontbl : questionLike) {
+			System.out.println(questiontbl.getQnum());
+			System.out.println(questiontbl.getQtitle());
+			System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+		}
+		
+		
+		
+		
 	}
 	
 

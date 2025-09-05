@@ -19,7 +19,7 @@ public interface QuestionRepository extends JpaRepository<Questiontbl, Long> {
 	// 메서드 이름은 무조건 카멜표기법으로 쓰기
 	// (select로 값 먼저 찾고 delete 하는 순서임, 따라서 트랜젝션이 되어야 함)
 	@Transactional
-	public void deleteAllByQtitle(String qtitle); // 질문 제목으로 삭제
+	public void deleteAllByQtitle(String qtitle); // 질문 제목으로 삭제, delete에서는 LIKE %% 조건 사용 안 됨 
 	
 	
 	// 가장 최근 질문이 위로 오도록 정렬해 모든 레코드 반환 (이름을 외우거나 지피티 이용..)
@@ -30,5 +30,8 @@ public interface QuestionRepository extends JpaRepository<Questiontbl, Long> {
 	
 	// 제목이 정확히 일치하는 레코드 조회
 	public List<Questiontbl> findAllByQtitle(String qtitle);
+	
+	// 특정 문자로 제목 레코드 조회 (like) + 최근 글이 위로 오도록 정렬
+	public List<Questiontbl> findAllByQtitleLikeOrderByQdateDesc(String keyword);
 	
 }
