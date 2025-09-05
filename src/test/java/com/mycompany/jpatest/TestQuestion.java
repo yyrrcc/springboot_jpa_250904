@@ -5,7 +5,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -14,6 +17,7 @@ import com.mycompany.jpatest.entity.Questiontbl;
 import com.mycompany.jpatest.repository.QuestionRepository;
 
 @SpringBootTest
+@TestMethodOrder (MethodOrderer.OrderAnnotation.class) // 10. 메서드 순서 정할 수도 있음 (추천 안함)
 public class TestQuestion {
 	
 	// 0. dao 역할을 해줌 (mapper .xml 즉 sql문 없이도 동작하는 dao)
@@ -24,6 +28,7 @@ public class TestQuestion {
 	
 	@Test
 	@DisplayName ("질문 등록 테스트")
+	@Order(2) // 11. 애노테이션에 괄호로 순서 정하기
 	public void writeQuestion() {
 		// 방법1. sql문을 안 쓰고 db에 값 넣기
 //		Questiontbl question = new Questiontbl();
@@ -49,6 +54,7 @@ public class TestQuestion {
 	
 	@Test
 	@DisplayName ("질문 삭제 테스트")
+	@Order(1)
 	public void deleteQuestion() {
 //		questionRepository.deleteAll(); // 모든 데이터 삭제 메서드
 		
@@ -66,6 +72,7 @@ public class TestQuestion {
 	
 	@Test
 	@DisplayName ("질문 조회 테스트")
+	@Order(3)
 	public void searchQuestion() {
 		 List<Questiontbl> questionList = questionRepository.findAll(); // 모든 레코드 가져오기
 		 for (Questiontbl questiontbl : questionList) {
@@ -92,6 +99,7 @@ public class TestQuestion {
 	
 	@Test
 	@DisplayName ("특정 질문 검색")
+	@Order(4)
 	public void searchQuestionByField() {
 		// 기본키 id를 이용해서 1개 또는 0개 record 불러옴
 		// 이때 null 존재 할 수도 -> 반환타입 optional -> boolean isPresent() 로 확인
@@ -124,6 +132,18 @@ public class TestQuestion {
 			System.out.println(questiontbl.getQtitle());
 			System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 		}
+		
+		
+		
+		
+//		// 직접 작성한 SQL 사용 @Query 사용
+		Questiontbl questionSql = questionRepository.findQuestionByQnum(10L);
+		System.out.println(questionSql.getQnum());
+		System.out.println(questionSql.getQtitle());
+		System.out.println("-----------");
+		
+		
+		
 		
 		
 		

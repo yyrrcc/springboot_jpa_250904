@@ -3,6 +3,8 @@ package com.mycompany.jpatest.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mycompany.jpatest.entity.Questiontbl;
@@ -34,4 +36,36 @@ public interface QuestionRepository extends JpaRepository<Questiontbl, Long> {
 	// 특정 문자로 제목 레코드 조회 (like) + 최근 글이 위로 오도록 정렬
 	public List<Questiontbl> findAllByQtitleLikeOrderByQdateDesc(String keyword);
 	
+	
+	// findBy 와 findAllBy 의 차이
+	// findAllBy : 반환값이 여러 개. 반환타입 리스트
+	// findBy : 실제 반환값이 리스트면 List로 반환되긴 함
+	
+	
+	// JPA-SQL문 직접 쓰기 ( * 못 써서 테이블이름(여기선 엔티티이름) 적고 네이밍 해준 후 그걸 가지고 와야 함, ? 대신 : 사용)
+	// Query 애노테이션, 엔티티 테이블 이름, * 사용 안됨, : 세미콜론 및 Param 애노테이션 
+	@Query ("SELECT q FROM Questiontbl q WHERE q.qnum = :qnum")
+	public Questiontbl findQuestionByQnum(@Param("qnum") Long qnum);
+
+	// JPA-SQL문 직접 쓰기 - LIKE 사용 시
+	@Query ("SELECT q FROM Questiontbl q WHERE q.qtitle LIKE %:qtitle%")
+	public List<Questiontbl> findAllQuestionByQtitle(@Param("qtitle") String qtitle);
+
+	// JPA-SQL문 직접 쓰기 - 부등호
+	@Query ("SELECT q FROM Questiontbl q WHERE q.qnum >= :number")
+	public List<Questiontbl> findAllQuestionByQnumber(@Param("number") Long number);
+
+	
+	// Native SQL문 (오리지널, 테이블은 db테이블 이름으로, * 사용 가능, : 사용은 똑같음, value와 nativeQuery 값 두개)
+	@Query (value = "SELECT * FROM jpaquestiontbl WHERE qnum = :qnum", nativeQuery = true)
+	public Questiontbl findQuestionNativeByQnum(@Param("qnum") Long qnum);	
+	
+	
+	
+	
+	// 기타 JPA 문법 : exists - 해당 레코드 존재 여부 확인(qnum이 존재하는 번호면 true 반환)
+	public boolean existsByQnum(Long qnum);
+	
+	// 기타 JPA 문법 : GreaterThan - 초과, GreaterThanEqual - 이상(>=)
+	public List<Questiontbl> findByQnumGreaterThanEqual(Long qnum);
 }
