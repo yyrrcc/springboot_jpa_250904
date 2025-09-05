@@ -3,6 +3,7 @@ package com.mycompany.jpatest.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,7 +43,7 @@ public interface QuestionRepository extends JpaRepository<Questiontbl, Long> {
 	// findBy : 실제 반환값이 리스트면 List로 반환되긴 함
 	
 	
-	// JPA-SQL문 직접 쓰기 ( * 못 써서 테이블이름(여기선 엔티티이름) 적고 네이밍 해준 후 그걸 가지고 와야 함, ? 대신 : 사용)
+	// JPA-SQL문(=JPQL) 직접 쓰기 ( * 못 써서 테이블이름(여기선 엔티티이름) 적고 네이밍 해준 후 그걸 가지고 와야 함, ? 대신 : 사용)
 	// Query 애노테이션, 엔티티 테이블 이름, * 사용 안됨, : 세미콜론 및 Param 애노테이션 
 	@Query ("SELECT q FROM Questiontbl q WHERE q.qnum = :qnum")
 	public Questiontbl findQuestionByQnum(@Param("qnum") Long qnum);
@@ -68,4 +69,21 @@ public interface QuestionRepository extends JpaRepository<Questiontbl, Long> {
 	
 	// 기타 JPA 문법 : GreaterThan - 초과, GreaterThanEqual - 이상(>=)
 	public List<Questiontbl> findByQnumGreaterThanEqual(Long qnum);
+	
+	
+	
+	
+	
+	// 질문 내용 업데이트 (성공하면 1, 실패하면 0 반환함)
+	@Modifying
+	@Transactional
+	// JPQL 방식
+	@Query ("UPDATE Questiontbl q SET q.qcontent = :qcontent WHERE q.qnum = :qnum")
+	public int updateQcontentByQnum(@Param("qcontent") String content, @Param("qnum") Long qnum);
+	
+	@Transactional
+	@Modifying
+	// native Sql 방식
+	@Query (value = "UPDATE jpaquestiontbl SET qcontent = :qcontent WHERE qnum = :qnum", nativeQuery = true)
+	public void updateNativeQcontentByQnum(@Param("qcontent") String content, @Param("qnum") Long qnum);
 }
