@@ -29,6 +29,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Questiontbl {
 	
+	// 0. 필드값은 무조건 소문자로 쓰기 왜냐면 카멜표기법 사용하면 db에 _ 언더바 이용해서 값이 들어가짐
+	
 	@Id // 3. 해당 테이블의 해당 필드를 기본키로 설정하겠다는 뜻
 	@Column (name = "qnum") // 8. 실제로 db 테이블에 만들어질 필드 이름 (똑같으면 생략 가능)
 	@GeneratedValue (strategy = GenerationType.SEQUENCE, generator = "QUESTION_SEQ_GENERATOR")
